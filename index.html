@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | Modern Glassmorphism</title>
+    <style>
+        /* --- RESET & BASE STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Prevent scrollbars */
+            height: 100vh;
+            width: 100vw;
+            color: #ffffff;
+        }
+
+        /* --- VIDEO BACKGROUND --- */
+        .video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        /* --- DARK OVERLAY --- */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.6); /* Dark blue/slate tint */
+            z-index: -1;
+            backdrop-filter: blur(3px); /* Slight blur to focus on content */
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- HEADING STYLES --- */
+        h1.main-title {
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 0.5rem;
+            margin-bottom: 4rem;
+            text-transform: uppercase;
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            opacity: 0; /* Hidden initially for animation */
+            animation: slideDownFade 1s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        /* --- CARD GRID --- */
+        .card-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 3rem;
+            width: 100%;
+            max-width: 900px;
+            justify-content: center;
+        }
+
+        /* --- GLASSMORPHISM CARDS (UPDATED FOR LINKS) --- */
+        .card {
+            flex: 1;
+            height: 250px;
+            max-width: 350px;
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            
+            /* Anchor Tag Specific Resets */
+            text-decoration: none; /* Remove underline */
+            color: #ffffff; /* Keep text white */
+
+            /* Animation Setup */
+            opacity: 0;
+            transform: translateY(30px);
+            animation: floatUp 1s ease-out forwards;
+        }
+
+        /* Stagger animation for cards */
+        .card:nth-child(1) { animation-delay: 1s; }
+        .card:nth-child(2) { animation-delay: 1.2s; }
+
+        /* Card Text */
+        .card h2 {
+            font-size: 2rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            z-index: 2;
+            pointer-events: none; /* Let clicks pass to card */
+        }
+
+        /* --- HOVER EFFECTS --- */
+        .card:hover {
+            transform: translateY(-10px) scale(1.05);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 15px 45px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(255, 255, 255, 0.2); /* Glow */
+        }
+
+        .card:hover h2 {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Shine effect on hover */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.1), 
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        /* --- ANIMATION KEYFRAMES --- */
+        @keyframes slideDownFade {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes floatUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media (max-width: 768px) {
+            h1.main-title {
+                font-size: 2.5rem;
+                letter-spacing: 0.2rem;
+                margin-bottom: 2rem;
+            }
+
+            .card-wrapper {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+
+            .card {
+                width: 100%;
+                max-width: 100%;
+                height: 180px;
+            }
+            
+            body {
+                overflow-y: auto; /* Allow scroll on mobile if content is tall */
+            }
+            
+            .container {
+                padding-top: 4rem;
+                padding-bottom: 4rem;
+                height: auto;
+                min-height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. FULL SCREEN VIDEO BACKGROUND -->
+    <video class="video-bg" autoplay muted loop playsinline poster="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+        <source src="/client bday project/mylivewallpapers-com-Couple-with-Sparklers-4K.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Overlay for readability -->
+    <div class="overlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        
+        <!-- 2. TOP HEADING -->
+        <h1 class="main-title">GALLERY</h1>
+
+        <!-- 3. CLICKABLE BOXES AS LINKS -->
+        <div class="card-wrapper">
+            
+            <!-- Left Box (Link 1) -->
+            <!-- REPLACE 'birthday.html' WITH YOUR ACTUAL LINK -->
+            <a href="/BIRTHDAY/index.html" class="card" id="btn-birthday">
+                <h2>Birthday</h2>
+            </a>
+
+            <!-- Right Box (Link 2) -->
+            <!-- REPLACE 'note.html' WITH YOUR ACTUAL LINK -->
+            <a href="/NOTE-20251218T034911Z-1-001/NOTE/index.html" class="card" id="btn-note">
+                <h2>Note</h2>
+            </a>
+            
+        </div>
+
+    </div>
+
+    <!-- 7. INTERNAL JAVASCRIPT (Minimal) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // JS is minimal now as links handle navigation.
+            // You can add tracking or extra logic here if needed.
+            console.log("Gallery Loaded");
+        });
+    </script>
+</body>
+</html>
